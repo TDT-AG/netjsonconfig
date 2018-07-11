@@ -454,6 +454,152 @@ schema = merge_config(default_schema, {
                     }
                 }
             }
+        },
+        "ddns": {
+            "type": "object",
+            "title": "DDNS Settings",
+            "additionalProperties": True,
+            "propertyOrder": 12,
+            "properties": {
+                "upd_privateip": {
+                    "type": "boolean",
+                    "title": "upd_privateip",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 1,
+                },
+                "ddns_dateformat": {
+                    "type": "string",
+                    "title": "ddns_dateformat",
+                    "default": "%F %R",
+                    "propertyOrder": 2,
+                },
+                "ddns_rundir": {
+                    "type": "string",
+                    "title": "ddns_rundir",
+                    "default": "/var/run/ddns",
+                    "propertyOrder": 3,
+                },
+                "ddns_logdir": {
+                    "type": "string",
+                    "title": "ddns_logdir",
+                    "default": "/var/log/ddns",
+                    "propertyOrder": 4,
+                },
+                "ddns_loglines": {
+                    "type": "integer",
+                    "title": "ddns_loglines",
+                    "default": 250,
+                    "propertyOrder": 5,
+                },
+                "use_curl": {
+                    "type": "boolean",
+                    "title": "use_curl",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 6,
+                },
+                "providers": {
+                    "type": "array",
+                    "title": "Service Providers",
+                    "uniqueItems": True,
+                    "additionalItems": True,
+                    "propertyOrder": 7,
+                    "items": {
+                        "type": "object",
+                        "title": "DDNS provider",
+                        "additionalProperties": True,
+                        "required": [
+                            "enabled",
+                            "interface",
+                            "ip_source",
+                            "lookup_host",
+                            "domain",
+                            "username",
+                            "password",
+                        ],
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean",
+                                "title": "enabled",
+                                "default": False,
+                                "format": "checkbox",
+                                "propertyOrder": 1,
+                            },
+                            "interface": {
+                                "type": "string",
+                                "title": "interface",
+                                "propertyOrder": 2,
+                            },
+                            "ip_source": {
+                                "type": "string",
+                                "title": "ip_source",
+                                "default": "network",
+                                "propertyOrder": 3,
+                            },
+                            "lookup_host": {
+                                "type": "string",
+                                "title": "lookup_host",
+                                "propertyOrder": 4,
+                            },
+                            "domain": {
+                                "type": "string",
+                                "title": "domain",
+                                "propertyOrder": 5,
+                            },
+                            "username": {
+                                "type": "string",
+                                "title": "username",
+                                "propertyOrder": 6,
+                            },
+                            "password": {
+                                "type": "string",
+                                "title": "password",
+                                "propertyOrder": 7,
+                            },
+                            "service_name": {
+                                "type": "string",
+                                "title": "service_name",
+                                "propertyOrder": 8,
+                            },
+                            "update_url": {
+                                "type": "string",
+                                "title": "update_url",
+                                "propertyOrder": 9,
+                            },
+                            "update_script": {
+                                "type": "string",
+                                "title": "update_script",
+                                "propertyOrder": 10,
+                            },
+                            "ip_interface": {
+                                "type": "string",
+                                "title": "ip_interface",
+                                "propertyOrder": 11,
+                            },
+                            "use_syslog": {
+                                "type": "integer",
+                                "title": "use_syslog",
+                                "enum": [
+                                    "disable",
+                                    "info, notice, warning, errors",
+                                    "notice, warning, errors",
+                                    "warning, errors",
+                                    "errors"
+                                ],
+                                "default": 0,
+                                "propertyOrder": 12,
+                            },
+                            "use_logfile": {
+                                "type": "boolean",
+                                "title": "use_logfile",
+                                "default": True,
+                                "propertyOrder": 13,
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 })
