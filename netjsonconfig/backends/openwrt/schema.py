@@ -459,7 +459,7 @@ schema = merge_config(default_schema, {
             "type": "object",
             "title": "DDNS Settings",
             "additionalProperties": True,
-            "propertyOrder": 12,
+            "propertyOrder": 11,
             "properties": {
                 "upd_privateip": {
                     "type": "boolean",
