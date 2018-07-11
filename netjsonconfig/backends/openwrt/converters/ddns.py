@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from ..schema import schema
 from .base import OpenWrtConverter
 
