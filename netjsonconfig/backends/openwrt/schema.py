@@ -634,13 +634,16 @@ schema = merge_config(default_schema, {
                                 "type": "integer",
                                 "title": "use_syslog",
                                 "description": "level of events logged to syslog",
-                                "enum": [
-                                    "disable",
-                                    "info, notice, warning, errors",
-                                    "notice, warning, errors",
-                                    "warning, errors",
-                                    "errors"
-                                ],
+                                "enum": [0, 1, 2, 3, 4],
+                                "options": {
+                                    "enum_titles": [
+                                        "0 - disable",
+                                        "1 - info, notice, warning, errors",
+                                        "2 - notice, warning, errors",
+                                        "3 - warning, errors",
+                                        "4 - errors"
+                                    ]
+                                },
                                 "default": 0,
                                 "propertyOrder": 15,
                             },
