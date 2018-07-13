@@ -31,8 +31,7 @@ class Ddns(OpenWrtConverter):
             uci_name = self._get_uci_name(provider['lookup_host'])
             resultdict = OrderedDict((('.name', uci_name),
                                       ('.type', 'service')))
-            for key, value in provider.items():
-                resultdict[key] = value
+            resultdict.update(provider)
             result.append(resultdict)
         return result
 
