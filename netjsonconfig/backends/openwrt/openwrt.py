@@ -20,6 +20,7 @@ class OpenWrt(BaseBackend):
         converters.Switch,
         converters.Radios,
         converters.Wireless,
+        converters.Multisim,
         converters.OpenVpn,
         converters.Default,
     ]
