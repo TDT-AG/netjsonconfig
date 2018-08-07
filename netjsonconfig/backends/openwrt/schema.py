@@ -166,6 +166,24 @@ schema = merge_config(default_schema, {
         "radio_80211ac_5ghz_settings": {
             "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
         },
+        "firewall_policy": {
+            "type": "string",
+            "enum": ["ACCEPT", "REJECT", "DROP"],
+            "options": {
+                "enum_titles": [
+                    "Accept", "Reject", "Drop"]
+            },
+            "default": "REJECT"
+        },
+        "zone_policy": {
+            "type": "string",
+            "enum": ["ACCEPT", "REJECT", "DROP"],
+            "options": {
+                "enum_titles": [
+                    "Accept", "Reject", "Drop"]
+            },
+            "default": "DROP"
+        },
     },
     "properties": {
         "general": {
@@ -451,6 +469,90 @@ schema = merge_config(default_schema, {
                     "mode": {
                         "type": "string",
                         "propertyOrder": 10,
+                    }
+                }
+            }
+        },
+        "firewall": {
+            "type": "object",
+            "title": "Firewall",
+            "additionalProperties": True,
+            "propertyOrder": 11,
+            "properties": {
+                "syn_flood": {
+                    "type": "boolean",
+                    "title": "enable SYN flood protection",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 1,
+                },
+                "input": {
+                    "allOf": [
+                        {"$ref": "#/definitions/firewall_policy"},
+                        {
+                            "title": "input",
+                            "description": "policy for the INPUT chain of the filter table",
+                            "propertyOrder": 2,
+                        }
+                    ]
+                },
+                "output": {
+                    "allOf": [
+                        {"$ref": "#/definitions/firewall_policy"},
+                        {
+                            "title": "output",
+                            "description": "policy for the OUTPUT chain of the filter table",
+                            "propertyOrder": 3,
+                        }
+                    ]
+                },
+                "forward": {
+                    "allOf": [
+                        {"$ref": "#/definitions/firewall_policy"},
+                        {
+                            "title": "forward",
+                            "description": "policy for the FORWARD chain of the filter table",
+                            "propertyOrder": 4,
+                        }
+                    ]
+                },
+                "forwardings": {
+                    "type": "array",
+                    "title": "Forwardings",
+                    "propertyOrder": 5,
+                    "items": {
+                        "type": "object",
+                        "title": "Forwarding",
+                        "additionalProperties": False,
+                        "required": [
+                            "src",
+                            "dest",
+                        ],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "title": "src",
+                                "description": "specifies the traffic source zone and must "
+                                               "refer to one of the defined zone names",
+                                "propertyOrder": 1,
+                            },
+                            "dest": {
+                                "type": "string",
+                                "title": "dest",
+                                "description": "specifies the traffic destination zone and must "
+                                               "refer to one of the defined zone names",
+                                "propertyOrder": 2,
+                            },
+                            "family": {
+                                "type": "string",
+                                "title": "family",
+                                "description": "protocol family (ipv4, ipv6 or any) to generate "
+                                               "iptables rules for",
+                                "enum": ["ipv4", "ipv6", "any"],
+                                "default": "any",
+                                "propertyOrder": 3
+                            }
+                        }
                     }
                 }
             }
