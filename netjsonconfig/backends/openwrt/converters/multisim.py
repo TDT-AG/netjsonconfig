@@ -9,9 +9,10 @@ class Multisim(OpenWrtConverter):
     _schema = schema['properties']['multisim']['items']
 
     def to_intermediate_loop(self, block, result, index=None):
+        uci_name = self._get_uci_name(block.pop('name'))
         block.update({
             '.type': 'multisim',
-            '.name': block.pop('name', None),
+            '.name': uci_name,
         })
         result.setdefault('multisim', [])
         result['multisim'].append(self.sorted_dict(block))
@@ -24,5 +25,5 @@ class Multisim(OpenWrtConverter):
 
     def __netjson_multisim(self, sim):
         del sim['.type']
-        sim['id'] = sim.pop('.name')
+        sim['name'] = sim.pop('.name')
         return self.type_cast(sim)

@@ -30,17 +30,17 @@ class TestMultisim(unittest.TestCase, _TabsMixin):
 
 config multisim 'Simcard1'
     option apn 'test1.tdt.de'
-    option plmn '4711'
     option pincode '25482'
+    option plmn '4711'
 
 config multisim 'Simcard2'
-    option username 'hans'
-    option password 'geheim'
     option apn 'test2.tdt.de'
-    option plmn '815'
-    option pincode '86734'
-    option modes 'lte,umts'
     option auth 'chap'
+    option modes 'lte,umts'
+    option password 'geheim'
+    option pincode '86734'
+    option plmn '815'
+    option username 'hans'
 """
 
     def test_render_multisim(self):
