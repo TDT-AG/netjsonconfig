@@ -989,6 +989,100 @@ schema = merge_config(default_schema, {
                     }
                 }
             }
+        },
+        "multisim": {
+            "type": "array",
+            "title": "Multisim Settings",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "propertyOrder": 11,
+            "items": {
+                "type": "object",
+                "title": "Sim",
+                "additionalProperties": True,
+                "required": [
+                    "name",
+                    "plmn",
+                    "apn"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "propertyOrder": 1,
+                    },
+                    "plmn": {
+                        "type": "integer",
+                        "title": "PLMN",
+                        "description": "Public Land Mobile Network (PLMN) identifier",
+                        "default": 0,
+                        "propertyOrder": 2,
+                    },
+                    "apn": {
+                        "type": "string",
+                        "title": "APN",
+                        "description": "Access Point Name (APN)",
+                        "propertyOrder": 3,
+                    },
+                    "pincode": {
+                        "type": "integer",
+                        "title": "Pincode",
+                        "description": "pincode of the SIM card",
+                        "propertyOrder": 4,
+                    },
+                    "auth": {
+                        "type": "string",
+                        "title": "Authentication",
+                        "enum": [
+                            "none",
+                            "chap",
+                            "pap",
+                            "both"
+                        ],
+                        "default": "none",
+                        "propertyOrder": 5,
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username",
+                        "description": "username for authentication",
+                        "propertyOrder": 6,
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password",
+                        "description": "password for authentication",
+                        "propertyOrder": 7,
+                    },
+                    "modes": {
+                        "type": "string",
+                        "title": "Modes",
+                        "description": "Allowed network modes",
+                        "enum": [
+                            "all",
+                            "lte",
+                            "umts",
+                            "gsm",
+                            "lte,umts",
+                            "lte,gsm",
+                            "umts,gsm"
+                        ],
+                        "options": {
+                            "enum_titles": [
+                                "All",
+                                "LTE",
+                                "UMTS",
+                                "GPRS",
+                                "LTE/UMTS",
+                                "LTE/GPRS",
+                                "UMTS/GPRS"
+                            ]
+                        },
+                        "default": "all",
+                        "propertyOrder": 8,
+                    }
+                }
+            }
         }
     }
 })
