@@ -10,8 +10,9 @@ from .rules import Rules
 from .switch import Switch
 from .wireless import Wireless
 from .firewall import Firewall
+from .ddns import Ddns
 
 __all__ = ['Default', 'Interfaces', 'General',
            'Led', 'Ntp', 'OpenVpn', 'Radios',
            'Routes', 'Rules', 'Switch',
-           'Wireless', 'Firewall']
+           'Wireless', 'Firewall', 'Ddns']
