@@ -166,33 +166,6 @@ schema = merge_config(default_schema, {
         "radio_80211ac_5ghz_settings": {
             "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
         },
-        "firewall_policy": {
-            "type": "string",
-            "enum": ["ACCEPT", "REJECT", "DROP"],
-            "options": {
-                "enum_titles": [
-                    "Accept", "Reject", "Drop"]
-            },
-            "default": "REJECT"
-        },
-        "zone_policy": {
-            "type": "string",
-            "enum": ["ACCEPT", "REJECT", "DROP"],
-            "options": {
-                "enum_titles": [
-                    "Accept", "Reject", "Drop"]
-            },
-            "default": "DROP"
-        },
-        "rule_policy": {
-            "type": "string",
-            "enum": ["ACCEPT", "REJECT", "DROP", "MARK", "NOTRACK"],
-            "options": {
-                "enum_titles": [
-                    "Accept", "Reject", "Drop", "Mark", "Notrack"]
-            },
-            "default": "DROP"
-        },
     },
     "properties": {
         "general": {
@@ -482,605 +455,140 @@ schema = merge_config(default_schema, {
                 }
             }
         },
-        "firewall": {
-            "type": "object",
-            "title": "Firewall",
-            "additionalProperties": True,
-            "propertyOrder": 11,
-            "properties": {
-                "syn_flood": {
-                    "type": "boolean",
-                    "title": "enable SYN flood protection",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 1,
-                },
-                "input": {
-                    "allOf": [
-                        {"$ref": "#/definitions/firewall_policy"},
-                        {
-                            "title": "input",
-                            "description": "policy for the INPUT chain of the filter table",
-                            "propertyOrder": 2,
-                        }
-                    ]
-                },
-                "output": {
-                    "allOf": [
-                        {"$ref": "#/definitions/firewall_policy"},
-                        {
-                            "title": "output",
-                            "description": "policy for the OUTPUT chain of the filter table",
-                            "propertyOrder": 3,
-                        }
-                    ]
-                },
-                "forward": {
-                    "allOf": [
-                        {"$ref": "#/definitions/firewall_policy"},
-                        {
-                            "title": "forward",
-                            "description": "policy for the FORWARD chain of the filter table",
-                            "propertyOrder": 4,
-                        }
-                    ]
-                },
-                "forwardings": {
-                    "type": "array",
-                    "title": "Forwardings",
-                    "propertyOrder": 5,
-                    "items": {
-                        "type": "object",
-                        "title": "Forwarding",
-                        "additionalProperties": False,
-                        "required": [
-                            "src",
-                            "dest",
-                        ],
-                        "properties": {
-                            "src": {
-                                "type": "string",
-                                "title": "src",
-                                "description": "specifies the traffic source zone and must "
-                                               "refer to one of the defined zone names",
-                                "propertyOrder": 1,
-                            },
-                            "dest": {
-                                "type": "string",
-                                "title": "dest",
-                                "description": "specifies the traffic destination zone and must "
-                                               "refer to one of the defined zone names",
-                                "propertyOrder": 2,
-                            },
-                            "family": {
-                                "type": "string",
-                                "title": "family",
-                                "description": "protocol family (ipv4, ipv6 or any) to generate "
-                                               "iptables rules for",
-                                "enum": ["ipv4", "ipv6", "any"],
-                                "default": "any",
-                                "propertyOrder": 3
-                            }
-                        }
-                    }
-                },
-                "zones": {
-                    "type": "array",
-                    "title": "Zones",
-                    "propertyOrder": 6,
-                    "items": {
-                        "type": "object",
-                        "title": "Zones",
-                        "additionalProperties": True,
-                        "required": [
-                            "name"
-                        ],
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "title": "name",
-                                "description": "unique zone name",
-                                "maxLength": 11,
-                                "propertyOrder": 1
-                            },
-                            "network": {
-                                "type": "array",
-                                "title": "Network",
-                                "description": "list of interfaces attached to this zone",
-                                "uniqueItems": True,
-                                "propertyOrder": 2,
-                                "items": {
-                                    "title": "Network",
-                                    "type": "string",
-                                    "maxLength": 15,
-                                    "pattern": "^[a-zA-z0-9_\\.\\-]*$"
-                                }
-                            },
-                            "masq": {
-                                "type": "boolean",
-                                "title": "masq",
-                                "description": "specifies wether outgoing zone traffic should be "
-                                               "masqueraded",
-                                "default": False,
-                                "format": "checkbox",
-                                "propertyOrder": 3
-                            },
-                            "mtu_fix": {
-                                "type": "boolean",
-                                "title": "mtu_fix",
-                                "description": "enable MSS clamping for outgoing zone traffic",
-                                "default": False,
-                                "format": "checkbox",
-                                "propertyOrder": 4,
-                            },
-                            "input": {
-                                "allOf": [
-                                    {"$ref": "#/definitions/zone_policy"},
-                                    {
-                                        "title": "input",
-                                        "description": "default policy for incoming zone traffic",
-                                        "propertyOrder": 5,
-                                    }
-                                ]
-                            },
-                            "output": {
-                                "allOf": [
-                                    {"$ref": "#/definitions/zone_policy"},
-                                    {
-                                        "title": "output",
-                                        "description": "default policy for outgoing zone traffic",
-                                        "propertyOrder": 6,
-                                    }
-                                ]
-                            },
-                            "forward": {
-                                "allOf": [
-                                    {"$ref": "#/definitions/zone_policy"},
-                                    {
-                                        "title": "forward",
-                                        "description": "default policy for forwarded zone traffic",
-                                        "propertyOrder": 7,
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "rules": {
-                    "type": "array",
-                    "title": "Rules",
-                    "propertyOrder": 7,
-                    "items": {
-                        "type": "object",
-                        "title": "Rules",
-                        "additionalProperties": True,
-                        "required": [
-                            "src",
-                            "target"
-                        ],
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "title": "name",
-                                "description": "name of the rule",
-                                "propertyOrder": 1
-                            },
-                            "src": {
-                                "type": "string",
-                                "title": "src",
-                                "description": "specifies the traffic source zone and must "
-                                               "refer to one of the defined zone names",
-                                "propertyOrder": 2
-                            },
-                            "src_ip": {
-                                "type": "string",
-                                "title": "src_ip",
-                                "description": "match incoming traffic from the specified "
-                                               "source ip address",
-                                "propertyOrder": 3
-                            },
-                            "src_mac": {
-                                "type": "string",
-                                "title": "src_mac",
-                                "description": "match incoming traffic from the specified "
-                                               "mac address",
-                                "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
-                                "minLength": 17,
-                                "maxLength": 17,
-                                "propertyOrder": 4
-                            },
-                            "src_port": {
-                                "type": "string",
-                                "title": "src_port",
-                                "description": "match incoming traffic from the specified "
-                                               "source port or port range, if relevant proto "
-                                               "is specified. Multiple ports can be specified "
-                                               "separated by blanks",
-                                "propertyOrder": 5
-                            },
-                            "proto": {
-                                "type": "string",
-                                "title": "proto",
-                                "description": "match incoming traffic using the given protocol. "
-                                               "Can be one of tcp, udp, tcpudp, udplite, icmp, esp, "
-                                               "ah, sctp, or all or it can be a numeric value, "
-                                               "representing one of these protocols or a different one. "
-                                               "A protocol name from /etc/protocols is also allowed. "
-                                               "The number 0 is equivalent to all",
-                                "default": "tcpudp",
-                                "propertyOrder": 6
-                            },
-                            "icmp_type": {
-                                "title": "icmp_type",
-                                "description": "for protocol icmp select specific icmp types to match. "
-                                               "Values can be either exact icmp type numbers or type names",
-                                "type": "array",
-                                "uniqueItems": True,
-                                "additionalItems": True,
-                                "propertyOrder": 7,
-                                "items": {
-                                    "title": "ICMP type",
-                                    "type": "string"
-                                }
-                            },
-                            "dest": {
-                                "type": "string",
-                                "title": "dest",
-                                "description": "specifies the traffic destination zone and must "
-                                               "refer to one of the defined zone names, or * for "
-                                               "any zone. If specified, the rule applies to forwarded "
-                                               "traffic; otherwise, it is treated as input rule",
-                                "propertyOrder": 8
-                            },
-                            "dest_ip": {
-                                "type": "string",
-                                "title": "dest_ip",
-                                "description": "match incoming traffic directed to the specified "
-                                               "destination ip address. With no dest zone, this "
-                                               "is treated as an input rule",
-                                "propertyOrder": 9
-                            },
-                            "dest_port": {
-                                "type": "string",
-                                "title": "dest_port",
-                                "description": "match incoming traffic directed at the given "
-                                               "destination port or port range, if relevant "
-                                               "proto is specified. Multiple ports can be specified "
-                                               "separated by blanks",
-                                "propertyOrder": 10
-                            },
-                            "target": {
-                                "allOf": [
-                                    {"$ref": "#/definitions/rule_policy"},
-                                    {
-                                        "title": "target",
-                                        "description": "firewall action for matched traffic",
-                                        "propertyOrder": 11
-                                    }
-                                ]
-                            },
-                            "family": {
-                                "type": "string",
-                                "title": "family",
-                                "description": "protocol family to generate iptables rules for",
-                                "enum": ["ipv4", "ipv6", "any"],
-                                "default": "any",
-                                "propertyOrder": 12
-                            },
-                            "limit": {
-                                "type": "string",
-                                "title": "limit",
-                                "description": "maximum average matching rate; specified as a number, "
-                                               "with an optional /second, /minute, /hour or /day suffix",
-                                "propertyOrder": 13
-                            },
-                            "enabled": {
-                                "type": "boolean",
-                                "title": "enable rule",
-                                "default": True,
-                                "format": "checkbox",
-                                "propertyOrder": 14
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "ddns": {
-            "type": "object",
-            "title": "DDNS Settings",
-            "additionalProperties": True,
-            "propertyOrder": 11,
-            "properties": {
-                "upd_privateip": {
-                    "type": "boolean",
-                    "title": "upd_privateip",
-                    "description": "disallow/allow sending of private/special IP's to the DDNS provider; "
-                                   "blocked IPv4: 0/8, 10/8, 100.64/10, 127/8, 169.254/16, 172.16/12, "
-                                   "192.168/16; blocked IPv6: ::/32, f000::/4",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 1,
-                },
-                "ddns_dateformat": {
-                    "type": "string",
-                    "title": "ddns_dateformat",
-                    "description": "date format to use for displaying dates in logfiles and LuCI",
-                    "default": "%F %R",
-                    "propertyOrder": 2,
-                },
-                "ddns_rundir": {
-                    "type": "string",
-                    "title": "ddns_rundir",
-                    "description": "directory to use for *.pid and *.update files",
-                    "default": "/var/run/ddns",
-                    "propertyOrder": 3,
-                },
-                "ddns_logdir": {
-                    "type": "string",
-                    "title": "ddns_logdir",
-                    "description": "directory to use for *.log files",
-                    "default": "/var/log/ddns",
-                    "propertyOrder": 4,
-                },
-                "ddns_loglines": {
-                    "type": "integer",
-                    "title": "ddns_loglines",
-                    "description": "number of lines stored in *.log files before automatically truncated",
-                    "default": 250,
-                    "propertyOrder": 5,
-                },
-                "use_curl": {
-                    "type": "boolean",
-                    "title": "use_curl",
-                    "description": "if both wget and curl are installed, wget is used for communication "
-                                   "by default",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 6,
-                },
-                "providers": {
-                    "type": "array",
-                    "title": "Service Providers",
-                    "uniqueItems": True,
-                    "additionalItems": True,
-                    "propertyOrder": 7,
-                    "items": {
-                        "type": "object",
-                        "title": "DDNS provider",
-                        "additionalProperties": True,
-                        "required": [
-                            "enabled",
-                            "interface",
-                            "ip_source",
-                            "lookup_host",
-                            "domain",
-                            "username",
-                            "password",
-                        ],
-                        "properties": {
-                            "enabled": {
-                                "type": "boolean",
-                                "title": "enabled",
-                                "default": False,
-                                "format": "checkbox",
-                                "propertyOrder": 1,
-                            },
-                            "interface": {
-                                "type": "string",
-                                "title": "interface",
-                                "description": "network from /etc/config/network to monitor for up/down "
-                                               "events to start the ddns update script via hotplug",
-                                "propertyOrder": 2,
-                            },
-                            "ip_source": {
-                                "type": "string",
-                                "title": "ip_source",
-                                "description": "specifies the source to detect the local IP: 'network' uses "
-                                               "'ip_network', 'web' uses 'ip_url', 'interface' uses "
-                                               "'ip_interface', 'script' uses 'ip_script'",
-                                "enum": [
-                                    "network",
-                                    "web",
-                                    "interface",
-                                    "script"
-                                ],
-                                "default": "network",
-                                "propertyOrder": 3,
-                            },
-                            "lookup_host": {
-                                "type": "string",
-                                "title": "lookup_host",
-                                "description": "FQDN of the host registered at the DDNS provider",
-                                "propertyOrder": 4,
-                            },
-                            "domain": {
-                                "type": "string",
-                                "title": "domain",
-                                "description": "the DNS name to update; this property can also be used for "
-                                               "special multihost update configurations supported by"
-                                               " some providers",
-                                "propertyOrder": 5,
-                            },
-                            "username": {
-                                "type": "string",
-                                "title": "username",
-                                "description": "username of the DDNS service account",
-                                "propertyOrder": 6,
-                            },
-                            "password": {
-                                "type": "string",
-                                "title": "password",
-                                "description": "password of the DDNS service account",
-                                "propertyOrder": 7,
-                            },
-                            "service_name": {
-                                "type": "string",
-                                "title": "service_name",
-                                "description": "name of the DDNS service to use",
-                                "propertyOrder": 8,
-                            },
-                            "update_url": {
-                                "type": "string",
-                                "title": "update_url",
-                                "description": "url to the DDNS service to use if 'service_name' is not set",
-                                "propertyOrder": 9,
-                            },
-                            "update_script": {
-                                "type": "string",
-                                "title": "update_script",
-                                "description": "script to use if 'service_name' is not set",
-                                "propertyOrder": 10,
-                            },
-                            "ip_network": {
-                                "type": "string",
-                                "title": "ip_network",
-                                "description": "network from /etc/config/network to use for detecting the IP "
-                                               "if 'ip_source' is set to 'network'",
-                                "default": "wan",
-                                "propertyOrder": 11,
-                            },
-                            "ip_url": {
-                                "type": "string",
-                                "title": "ip_url",
-                                "description": "url to use for detecting the IP if 'ip_source' is set to "
-                                               "'web'",
-                                "propertyOrder": 12,
-                            },
-                            "ip_interface": {
-                                "type": "string",
-                                "title": "ip_interface",
-                                "description": "local interface to use for detecting the IP if 'ip_source' is"
-                                               " set to 'interface'",
-                                "propertyOrder": 13,
-                            },
-                            "ip_script": {
-                                "type": "string",
-                                "title": "ip_script",
-                                "description": "script to use for detecting the IP if 'ip_source' is set to "
-                                               "'script'",
-                                "propertyOrder": 14,
-                            },
-                            "use_syslog": {
-                                "type": "integer",
-                                "title": "use_syslog",
-                                "description": "level of events logged to syslog",
-                                "enum": [0, 1, 2, 3, 4],
-                                "options": {
-                                    "enum_titles": [
-                                        "0 - disable",
-                                        "1 - info, notice, warning, errors",
-                                        "2 - notice, warning, errors",
-                                        "3 - warning, errors",
-                                        "4 - errors"
-                                    ]
-                                },
-                                "default": 0,
-                                "propertyOrder": 15,
-                            },
-                            "use_logfile": {
-                                "type": "boolean",
-                                "title": "use_logfile",
-                                "description": "disable/enable logging to logfile",
-                                "default": True,
-                                "propertyOrder": 16,
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "multisim": {
+        "ipsec": {
             "type": "array",
-            "title": "Multisim Settings",
+            "title": "IPsec",
             "uniqueItems": True,
             "additionalItems": True,
-            "propertyOrder": 11,
+            "propertyOrder": 10,
             "items": {
                 "type": "object",
-                "title": "Sim",
+                "title": "IPsec",
                 "additionalProperties": True,
                 "required": [
                     "name",
-                    "plmn",
-                    "apn"
                 ],
                 "properties": {
                     "name": {
                         "type": "string",
-                        "title": "Name",
                         "propertyOrder": 1,
                     },
-                    "plmn": {
-                        "type": "integer",
-                        "title": "PLMN",
-                        "description": "Public Land Mobile Network (PLMN) identifier",
-                        "default": 0,
+                    "auto": {
+                        "type": "string",
+                        "enum": [
+                            "ignore",
+                            "add",
+                            "route",
+                            "start",
+                        ],
                         "propertyOrder": 2,
                     },
-                    "apn": {
+                    "type": {
                         "type": "string",
-                        "title": "APN",
-                        "description": "Access Point Name (APN)",
+                        "enum": [
+                            "tunnel",
+                            "transport",
+                            "transport_proxy",
+                            "passthrough",
+                            "drop",
+                        ],
                         "propertyOrder": 3,
                     },
-                    "pincode": {
-                        "type": "integer",
-                        "title": "Pincode",
-                        "description": "pincode of the SIM card",
-                        "propertyOrder": 4,
-                    },
-                    "auth": {
+                    "closeaction": {
                         "type": "string",
-                        "title": "Authentication",
                         "enum": [
                             "none",
-                            "chap",
-                            "pap",
-                            "both"
+                            "clear",
+                            "hold",
+                            "restart",
                         ],
-                        "default": "none",
+                        "propertyOrder": 4,
+                    },
+                    "dpdaction": {
+                        "type": "string",
+                        "enum": [
+                            "none",
+                            "clear",
+                            "hold",
+                            "restart",
+                        ],
                         "propertyOrder": 5,
                     },
-                    "username": {
-                        "type": "string",
-                        "title": "Username",
-                        "description": "username for authentication",
+                    "dpddelay": {
+                        "type": "integer",
                         "propertyOrder": 6,
                     },
-                    "password": {
-                        "type": "string",
-                        "title": "Password",
-                        "description": "password for authentication",
+                    "dpdtimeout": {
+                        "type": "integer",
                         "propertyOrder": 7,
                     },
-                    "modes": {
+                    "authby": {
                         "type": "string",
-                        "title": "Modes",
-                        "description": "Allowed network modes",
                         "enum": [
-                            "all",
-                            "lte",
-                            "umts",
-                            "gsm",
-                            "lte,umts",
-                            "lte,gsm",
-                            "umts,gsm"
+                            "pubkey",
+                            "rsasig",
+                            "ecdsasig",
+                            "psk",
+                            "secret",
+                            "xauthrsasig",
+                            "xauthpsk",
+                            "never",
                         ],
-                        "options": {
-                            "enum_titles": [
-                                "All",
-                                "LTE",
-                                "UMTS",
-                                "GPRS",
-                                "LTE/UMTS",
-                                "LTE/GPRS",
-                                "UMTS/GPRS"
-                            ]
-                        },
-                        "default": "all",
                         "propertyOrder": 8,
-                    }
+                    },
+                    "keyexchange": {
+                        "type": "string",
+                        "enum": [
+                            "ike",
+                            "ikev1",
+                            "ikev2",
+                        ],
+                        "propertyOrder": 9,
+                    },
+                    "ike": {
+                        "type": "array",
+                        "uniqueItems": True,
+                        "additionalItems": True,
+                        "items": {
+                            "type": "string",
+                            "title": "ike",
+                        },
+                        "propertyOrder": 10,
+                    },
+                    "esp": {
+                        "type": "array",
+                        "uniqueItems": True,
+                        "additionalItems": True,
+                        "items": {
+                            "type": "string",
+                            "title": "esp",
+                        },
+                        "propertyOrder": 11,
+                    },
+                    "leftsubnet": {
+                        "type": "string",
+                        "propertyOrder": 12,
+                    },
+                    "right": {
+                        "type": "string",
+                        "propertyOrder": 13,
+                    },
+                    "rightsubnet": {
+                        "type": "string",
+                        "propertyOrder": 14,
+                    },
+                    "leftfirewall": {
+                        "type": "boolean",
+                        "default": False,
+                        "format": "checkbox",
+                        "propertyOrder": 15,
+                    },
+                    "lefthostaccess": {
+                        "type": "boolean",
+                        "default": False,
+                        "format": "checkbox",
+                        "propertyOrder": 16,
+                    },
                 }
             }
         }

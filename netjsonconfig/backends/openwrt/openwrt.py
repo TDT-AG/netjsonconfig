@@ -20,10 +20,8 @@ class OpenWrt(BaseBackend):
         converters.Switch,
         converters.Radios,
         converters.Wireless,
-        converters.Multisim,
+        converters.IPsec,
         converters.OpenVpn,
-        converters.Firewall,
-        converters.Ddns,
         converters.Default,
     ]
     parser = OpenWrtParser
