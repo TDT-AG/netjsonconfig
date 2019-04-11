@@ -9,6 +9,7 @@ from .routes import Routes
 from .rules import Rules
 from .switch import Switch
 from .wireless import Wireless
+from .mwan3 import Mwan3
 
 __all__ = [
     'Default',
@@ -22,4 +23,5 @@ __all__ = [
     'Rules',
     'Switch',
     'Wireless',
+    'Mwan3'
 ]
