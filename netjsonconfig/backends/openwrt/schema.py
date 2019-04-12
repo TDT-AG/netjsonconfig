@@ -456,139 +456,202 @@ schema = merge_config(default_schema, {
             }
         },
         "ipsec": {
-            "type": "array",
+            "type": "object",
             "title": "IPsec",
-            "uniqueItems": True,
-            "additionalItems": True,
+            "additionalProperties": True,
             "propertyOrder": 10,
-            "items": {
-                "type": "object",
-                "title": "IPsec",
-                "additionalProperties": True,
-                "required": [
-                    "name",
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "propertyOrder": 1,
-                    },
-                    "auto": {
-                        "type": "string",
-                        "enum": [
-                            "ignore",
-                            "add",
-                            "route",
-                            "start",
-                        ],
-                        "propertyOrder": 2,
-                    },
-                    "type": {
-                        "type": "string",
-                        "enum": [
-                            "tunnel",
-                            "transport",
-                            "transport_proxy",
-                            "passthrough",
-                            "drop",
-                        ],
-                        "propertyOrder": 3,
-                    },
-                    "closeaction": {
-                        "type": "string",
-                        "enum": [
-                            "none",
-                            "clear",
-                            "hold",
-                            "restart",
-                        ],
-                        "propertyOrder": 4,
-                    },
-                    "dpdaction": {
-                        "type": "string",
-                        "enum": [
-                            "none",
-                            "clear",
-                            "hold",
-                            "restart",
-                        ],
-                        "propertyOrder": 5,
-                    },
-                    "dpddelay": {
-                        "type": "integer",
-                        "propertyOrder": 6,
-                    },
-                    "dpdtimeout": {
-                        "type": "integer",
-                        "propertyOrder": 7,
-                    },
-                    "authby": {
-                        "type": "string",
-                        "enum": [
-                            "pubkey",
-                            "rsasig",
-                            "ecdsasig",
-                            "psk",
-                            "secret",
-                            "xauthrsasig",
-                            "xauthpsk",
-                            "never",
-                        ],
-                        "propertyOrder": 8,
-                    },
-                    "keyexchange": {
-                        "type": "string",
-                        "enum": [
-                            "ike",
-                            "ikev1",
-                            "ikev2",
-                        ],
-                        "propertyOrder": 9,
-                    },
-                    "ike": {
-                        "type": "array",
-                        "uniqueItems": True,
-                        "additionalItems": True,
-                        "items": {
-                            "type": "string",
-                            "title": "ike",
-                        },
-                        "propertyOrder": 10,
-                    },
-                    "esp": {
-                        "type": "array",
-                        "uniqueItems": True,
-                        "additionalItems": True,
-                        "items": {
-                            "type": "string",
-                            "title": "esp",
-                        },
-                        "propertyOrder": 11,
-                    },
-                    "leftsubnet": {
-                        "type": "string",
-                        "propertyOrder": 12,
-                    },
-                    "right": {
-                        "type": "string",
-                        "propertyOrder": 13,
-                    },
-                    "rightsubnet": {
-                        "type": "string",
-                        "propertyOrder": 14,
-                    },
-                    "leftfirewall": {
-                        "type": "boolean",
-                        "default": False,
-                        "format": "checkbox",
-                        "propertyOrder": 15,
-                    },
-                    "lefthostaccess": {
-                        "type": "boolean",
-                        "default": False,
-                        "format": "checkbox",
-                        "propertyOrder": 16,
-                    },
+            "properties": {
+                "secret": {
+                    "type": "array",
+                    "title": "Secrets",
+                    "propertyOrder": 1,
+                    "items": {
+                        "type": "object",
+                        "title": "Secret",
+                        "additionalProperties": True,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "propertyOrder": 1
+                            },
+                            "id_selector": {
+                                "type": "string",
+                                "propertyOrder": 2
+                            },
+                            "pass_secret": {
+                                "type": "string",
+                                "propertyOrder": 3
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "RSA",
+                                    "PSK",
+                                    "EAP",
+                                    "XAUTH",
+                                    "P12",
+                                    "ECDSA",
+                                    "BLISS",
+                                    "NTLM"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "conn": {
+                    "type": "array",
+                    "title": "Connections",
+                    "propertyOrder": 2,
+                    "items": {
+                        "type": "object",
+                        "title": "Connection",
+                        "additionalProperties": False,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "propertyOrder": 1
+                            },
+                            "auto": {
+                                "type": "string",
+                                "enum": [
+                                    "ignore",
+                                    "add",
+                                    "route",
+                                    "start",
+                                ],
+                                "default": "ignore",
+                                "propertyOrder": 2
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "tunnel",
+                                    "transport",
+                                    "transport_proxy",
+                                    "passthrough",
+                                    "drop",
+                                ],
+                                "default": "tunnel",
+                                "propertyOrder": 3
+                            },
+                            "closeaction": {
+                                "type": "string",
+                                "enum": [
+                                    "none",
+                                    "clear",
+                                    "hold",
+                                    "restart",
+                                ],
+                                "default": "none",
+                                "propertyOrder": 4
+                            },
+                            "dpdaction": {
+                                "type": "string",
+                                "enum": [
+                                    "none",
+                                    "clear",
+                                    "hold",
+                                    "restart",
+                                ],
+                                "default": "none",
+                                "propertyOrder": 5
+                            },
+                            "dpddelay": {
+                                "type": "integer",
+                                "default": 30,
+                                "minimum": 0,
+                                "propertyOrder": 6
+                            },
+                            "dpdtimeout": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "default": 150,
+                                "propertyOrder": 7
+                            },
+                            "authby": {
+                                "type": "string",
+                                "enum": [
+                                    "pubkey",
+                                    "rsasig",
+                                    "ecdsasig",
+                                    "psk",
+                                    "secret",
+                                    "xauthrsasig",
+                                    "xauthpsk",
+                                    "never",
+                                ],
+                                "propertyOrder": 8
+                            },
+                            "keyexchange": {
+                                "type": "string",
+                                "enum": [
+                                    "ike",
+                                    "ikev1",
+                                    "ikev2",
+                                ],
+                                "default": "ike",
+                                "propertyOrder": 9
+                            },
+                            "keyingtries": {
+                                "type": "string",
+                                "description": "could be a positiv number or "
+                                "%forever",
+                                "pattern": "^(\d+|\%forever)$",
+                                "default": "3",
+                                "propertyOrder": 10
+                            },
+                            "ike": {
+                                "type": "array",
+                                "uniqueItems": True,
+                                "additionalItems": True,
+                                "items": {
+                                    "type": "string",
+                                    "title": "ike",
+                                },
+                                "propertyOrder": 11
+                            },
+                            "esp": {
+                                "type": "array",
+                                "uniqueItems": True,
+                                "additionalItems": True,
+                                "items": {
+                                    "type": "string",
+                                    "title": "esp"
+                                },
+                                "propertyOrder": 12
+                            },
+                            "leftsubnet": {
+                                "type": "string",
+                                "propertyOrder": 13
+                            },
+                            "right": {
+                                "type": "string",
+                                "propertyOrder": 14
+                            },
+                            "rightsubnet": {
+                                "type": "string",
+                                "propertyOrder": 15
+                            },
+                            "leftfirewall": {
+                                "type": "string",
+                                "enum": [
+                                    "yes",
+                                    "no",
+                                ],
+                                "default": "no",
+                                "propertyOrder": 16
+                            },
+                            "lefthostaccess": {
+                                "type": "string",
+                                "enum": [
+                                    "yes",
+                                    "no",
+                                ],
+                                "default": "no",
+                                "propertyOrder": 17
+                            },
+                        }
+                    }
                 }
             }
         }
