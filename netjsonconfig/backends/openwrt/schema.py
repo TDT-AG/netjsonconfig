@@ -476,6 +476,9 @@ schema = merge_config(default_schema, {
                             },
                             "id_selector": {
                                 "type": "string",
+                                "description": "A selector is an IP address, "
+                                               "a Fully Qualified Domain Name,"
+                                               " user@FQDN, %any or %any6.",
                                 "propertyOrder": 2
                             },
                             "pass_secret": {
@@ -484,6 +487,8 @@ schema = merge_config(default_schema, {
                             },
                             "type": {
                                 "type": "string",
+                                "description": "Specifies the type of the "
+                                               "secret.",
                                 "enum": [
                                     "RSA",
                                     "PSK",
@@ -513,6 +518,9 @@ schema = merge_config(default_schema, {
                             },
                             "auto": {
                                 "type": "string",
+                                "description": "Defines which action schould "
+                                               "be performed at IPsec "
+                                               "startup.",
                                 "enum": [
                                     "ignore",
                                     "add",
@@ -524,6 +532,7 @@ schema = merge_config(default_schema, {
                             },
                             "type": {
                                 "type": "string",
+                                "description": "The type of the connection.",
                                 "enum": [
                                     "tunnel",
                                     "transport",
@@ -536,6 +545,9 @@ schema = merge_config(default_schema, {
                             },
                             "closeaction": {
                                 "type": "string",
+                                "description": "Defines the action to take if"
+                                               "the remote peer unexpectedly "
+                                               " closes a CHILD_SA.",
                                 "enum": [
                                     "none",
                                     "clear",
@@ -547,6 +559,8 @@ schema = merge_config(default_schema, {
                             },
                             "dpdaction": {
                                 "type": "string",
+                                "description": "Controls the use of the Dead "
+                                               "Peer Detection protocol.",
                                 "enum": [
                                     "none",
                                     "clear",
@@ -558,18 +572,31 @@ schema = merge_config(default_schema, {
                             },
                             "dpddelay": {
                                 "type": "integer",
+                                "description": "Defines the period time "
+                                               "interval in seconds, with "
+                                               "wich R_U_THERE messages "
+                                               "exchanges are sent to the "
+                                               "peer.",
                                 "default": 30,
                                 "minimum": 0,
                                 "propertyOrder": 6
                             },
                             "dpdtimeout": {
                                 "type": "integer",
+                                "description": "Defines the timout interval "
+                                               "in seconds, after which all "
+                                               "connections to a peer are "
+                                               "deleted in case of "
+                                               "inactivity.",
                                 "minimum": 0,
                                 "default": 150,
                                 "propertyOrder": 7
                             },
                             "authby": {
                                 "type": "string",
+                                "description": "How the two security gateways "
+                                               "should authenticate each "
+                                               "other.",
                                 "enum": [
                                     "pubkey",
                                     "rsasig",
@@ -584,6 +611,9 @@ schema = merge_config(default_schema, {
                             },
                             "keyexchange": {
                                 "type": "string",
+                                "description": "Method of key exchange; which "
+                                               "protocol should be used to "
+                                               "initialize the connection.",
                                 "enum": [
                                     "ike",
                                     "ikev1",
@@ -594,14 +624,23 @@ schema = merge_config(default_schema, {
                             },
                             "keyingtries": {
                                 "type": "string",
-                                "description": "could be a positiv number or "
-                                "%forever",
+                                "description": "How many attempts (a positive "
+                                               "integer or %forever) should "
+                                               "be made to negotiate a "
+                                               "connection, or replacement "
+                                               "for one, before giving up.",
                                 "pattern": "^(\d+|\%forever)$",
                                 "default": "3",
                                 "propertyOrder": 10
                             },
                             "ike": {
                                 "type": "array",
+                                "description": "List of IKE/ISAKMP SA "
+                                               "encryption/authentication "
+                                               "algorithms to be used, e.g. "
+                                               "aes128-sha256-modp3072. The "
+                                               "notation is encryption-"
+                                               "integrity[-prf]-dhgroup.",
                                 "uniqueItems": True,
                                 "additionalItems": True,
                                 "items": {
@@ -612,6 +651,13 @@ schema = merge_config(default_schema, {
                             },
                             "esp": {
                                 "type": "array",
+                                "description": "List of ESP encryption/"
+                                               "authentication algorithms to "
+                                               "be used for the connection, "
+                                               "e.g. aes128-sha256. The "
+                                               "notation is encryption-"
+                                               "integrity[-dhgroup]"
+                                               "[-esnmode].",
                                 "uniqueItems": True,
                                 "additionalItems": True,
                                 "items": {
@@ -622,18 +668,33 @@ schema = merge_config(default_schema, {
                             },
                             "leftsubnet": {
                                 "type": "string",
+                                "description": "Private subnet behind the "
+                                               "left participant, expressed "
+                                               "as network/netmask.",
                                 "propertyOrder": 13
                             },
                             "right": {
                                 "type": "string",
+                                "description": "The IP address of the "
+                                               "participant's public-network "
+                                               "interface or one of several "
+                                               "magic values.",
                                 "propertyOrder": 14
                             },
                             "rightsubnet": {
                                 "type": "string",
+                                "description": "Private subnet behind the "
+                                               "right participant, expressed "
+                                               "as network/netmask.",
                                 "propertyOrder": 15
                             },
                             "leftfirewall": {
                                 "type": "string",
+                                "description": "The left participant is doing "
+                                               "forwarding-firewalling "
+                                               "(including masquerading) using"
+                                               " iptables for traffic from "
+                                               "leftsubnet.",
                                 "enum": [
                                     "yes",
                                     "no",
@@ -643,6 +704,14 @@ schema = merge_config(default_schema, {
                             },
                             "lefthostaccess": {
                                 "type": "string",
+                                "description": "Inserts a pair fo INPUT and "
+                                               "OUTPUT iptables rules using "
+                                               "the default ipsec _updown "
+                                               "script, thus allowing access "
+                                               "to the host itself in the "
+                                               "case where the host's "
+                                               "internal interface is part of"
+                                               "the negotiated client subnet.",
                                 "enum": [
                                     "yes",
                                     "no",
