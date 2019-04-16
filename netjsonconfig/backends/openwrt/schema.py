@@ -678,7 +678,9 @@ schema = merge_config(default_schema, {
                                 "description": "The IP address of the "
                                                "participant's public-network "
                                                "interface or one of several "
-                                               "magic values.",
+                                               "magic values (ip-address | "
+                                               "fqdn | %any | range | "
+                                               "subnet).",
                                 "propertyOrder": 14
                             },
                             "rightsubnet": {
