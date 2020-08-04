@@ -31,7 +31,9 @@ class TestMwan3(unittest.TestCase, _TabsMixin):
                     "max_ttl": 60,
                     "initial_state": "online",
                     "size": 56,
-                    "flush_conntrack": "never"
+                    "flush_conntrack": [
+                        "never",
+                    ],
                 },
                 {
                     "name": "wan_1",
@@ -54,7 +56,10 @@ class TestMwan3(unittest.TestCase, _TabsMixin):
                     "max_ttl": 60,
                     "initial_state": "online",
                     "size": 56,
-                    "flush_conntrack": "never"
+                    "flush_conntrack": [
+                        "ifup",
+                        "always",
+                    ],
                 }
             ]
         }
@@ -68,7 +73,7 @@ config interface 'interface_wan'
     option enabled '0'
     option failure_interval '3'
     option family 'ipv4'
-    option flush_conntrack 'never'
+    list flush_conntrack 'never'
     option initial_state 'online'
     option interval '10'
     option keep_failure_interval '0'
@@ -89,7 +94,8 @@ config interface 'interface_wan_1'
     option enabled '0'
     option failure_interval '3'
     option family 'ipv4'
-    option flush_conntrack 'never'
+    list flush_conntrack 'ifup'
+    list flush_conntrack 'always'
     option initial_state 'online'
     option interval '10'
     option keep_failure_interval '0'

@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from ..schema import schema
 from .base import OpenWrtConverter
 
@@ -11,34 +9,43 @@ class Mwan3(OpenWrtConverter):
     _schema = schema['properties']['mwan3']
 
     def to_intermediate_loop(self, block, result, index=None):
-        interfaces = self.__intermediate_interfaces(block.pop('interfaces', {}))
-        result.setdefault('mwan3', [])
-        result['mwan3'] = [self.sorted_dict(block)] + interfaces
+        interfaces = self.__intermediate_interfaces(block, 'interfaces')
+
+        result.setdefault(self.intermediate_key, [])
+        result[self.intermediate_key] = interfaces
         return result
 
-    def __intermediate_interfaces(self, interfaces):
-        """
-        converts NetJSON interface to
-        UCI intermediate data structure
-        """
+    def __intermediate_interfaces(self, block, uci_type):
         result = []
-        for interface in interfaces:
-            resultdict = OrderedDict((('.name', self.__get_auto_name_interface(interface)),
-                                      ('.type', 'interface')))
-            resultdict.update(interface)
-            result.append(resultdict)
+
+        for interface in block.get(uci_type, {}):
+            interface.update(
+                {
+                    '.type': 'interface',
+                    '.name': self.__get_auto_name(interface)
+                }
+            )
+            result.append(self.sorted_dict(interface))
+
         return result
 
-    def __get_auto_name_interface(self, interface):
-        return 'interface_{0}'.format(self._get_uci_name(interface['name']))
+    def __get_auto_name(self, interface):
+        return 'interface_{0}'.format(interface.get('name', None))
 
     def to_netjson_loop(self, block, result, index):
-        result['mwan3'] = self.__netjson_mwan3(block)
+        result.setdefault(self.netjson_key, {})
+        result[self.netjson_key].setdefault('interfaces', [])
+        result[self.netjson_key]['interfaces'].append(
+            self.__netjson_mwan3(block)
+        )
         return result
 
     def __netjson_mwan3(self, mwan3):
         del mwan3['.type']
         _name = mwan3.pop('.name')
-        if _name != 'mwan3':
+
+        if _name != self.__get_auto_name(mwan3):
             mwan3['id'] = _name
-        return self.type_cast(mwan3)
+
+        schema = self._schema.get('properties').get('interfaces').get('items')
+        return self.type_cast(mwan3, schema=schema)

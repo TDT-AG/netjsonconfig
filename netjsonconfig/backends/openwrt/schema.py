@@ -559,17 +559,22 @@ schema = merge_config(
                                     "propertyOrder": 17,
                                 },
                                 "flush_conntrack": {
-                                    "type": "string",
+                                    "type": "array",
+                                    "uniqueItems": True,
                                     "title": "Flush connection tracking",
-                                    "description": "specifies upon which events the connections table should be "
-                                                   "flushed",
-                                    "enum": [
-                                        "ifup",
-                                        "ifdown",
-                                        "always",
-                                        "never",
-                                    ],
-                                    "default": "never",
+                                    "items": {
+                                        "title": "Flush conntrack event",
+                                        "type": "string",
+                                        "description": "specifies upon which events the connections table should be "
+                                                       "flushed",
+                                        "enum": [
+                                            "ifup",
+                                            "ifdown",
+                                            "always",
+                                            "never",
+                                        ],
+                                        "default": "never",
+                                    },
                                     "propertyOrder": 18,
                                 },
                             },
