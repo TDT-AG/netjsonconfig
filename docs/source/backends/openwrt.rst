@@ -1412,7 +1412,7 @@ Will be rendered as follows::
 
     config route 'route1'
             option gateway '192.168.2.2'
-            option interface 'eth1'
+            option interface 'eth1'a
             option metric '2'
             option mtu '1450'
             option netmask '255.255.255.0'
@@ -1814,6 +1814,125 @@ Will be rendered as follows::
             option name 'WLAN2G'
             option sysfs 'tp-link:blue:wlan2g'
             option trigger 'phy0tpt'
+
+Mwan3 settings
+--------------
+
+The mwan3 settings reside in the ``mwan3`` key of the *configuration dictionary*,
+which is a custom NetJSON extension not present in the original NetJSON RFC.
+
+The ``mwan3`` key must contain a dictionary, the allowed options are:
+
++----------------+------+
+| key name       | type |
++================+======+
+| ``interfaces`` | list |
++----------------+------+
+
+The ``interfaces`` key must contain a list of interfaces (dictionaries),
+each interface allowes the following options:
+
++---------------------------+---------+----------------------------------------+
+| key name                  | type    | function                               |
++===========================+=========+========================================+
+| ``name``                  | string  | name of interface                      |
++---------------------------+---------+----------------------------------------+
+| ``enabled``               | string  | mwan3 enabled on interface             |
++---------------------------+---------+----------------------------------------+
+| ``track_method``          | string  | tracking method                        |
++---------------------------+---------+----------------------------------------+
+| ``track_ip``              | list    | list of IPs to ping                    |
++---------------------------+---------+----------------------------------------+
+| ``reliabilitiy``          | integer | number of IPs that must reply          |
++---------------------------+---------+----------------------------------------+
+| ``count``                 | integer | number of checks sent                  |
++---------------------------+---------+----------------------------------------+
+| ``timeout``               | integer | seconds to wait for reply              |
++---------------------------+---------+----------------------------------------+
+| ``interval``              | integer | seconds between checks                 |
++---------------------------+---------+----------------------------------------+
+| ``failure _interval``     | integer | seconds between checks after failure   |
++---------------------------+---------+----------------------------------------+
+| ``recovery _interval``    | integer | seconds between checks after recovery  |
++---------------------------+---------+----------------------------------------+
+| ``keep_failure_interval`` | boolean | seconds between checks during teardown |
++---------------------------+---------+----------------------------------------+
+| ``up``                    | integer | number of checks to consider link up   |
++---------------------------+---------+----------------------------------------+
+| ``down``                  | integer | number of checks to consider link down |
++---------------------------+---------+----------------------------------------+
+| ``family``                | string  | IP Family                              |
++---------------------------+---------+----------------------------------------+
+| ``max_ttl``               | integer | TTL when method is ping                |
++---------------------------+---------+----------------------------------------+
+| ``initial_state``         | string  | initial state of interface             |
++---------------------------+---------+----------------------------------------+
+| ``size``                  | integer | Size of ping packets in bytes          |
++---------------------------+---------+----------------------------------------+
+| ``flush_conntrack``       | list    | events for connection table flush      |
++---------------------------+---------+----------------------------------------+
+
+Mwan3 settings example
+~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+   {
+       "mwan3": {
+           "interfaces": [
+               {
+                   "name": "wan",
+                   "enabled": False,
+                   "track_method": "ping",
+                   "track_ip": [
+                       "192.0.0.1",
+                       "192.0.0.2"
+                   ],
+                   "reliability": 1,
+                   "count": 1,
+                   "timeout": 4,
+                   "interval": 10,
+                   "failure_interval": 3,
+                   "recovery_interval": 3,
+                   "keep_failure_interval": False,
+                   "up": 5,
+                   "down": 5,
+                   "family": "ipv4",
+                   "max_ttl": 60,
+                   "initial_state": "online",
+                   "size": 56,
+                   "flush_conntrack": [
+                       "never",
+                   ],
+               }
+	   ]
+       }
+   }
+
+Will be rendered as follows::
+
+    config interface 'interface_wan'
+            option count '1'
+            option down '5'
+            option enabled '0'
+            option failure_interval '3'
+            option family 'ipv4'
+            list flush_conntrack 'never'
+            option initial_state 'online'
+            option interval '10'
+            option keep_failure_interval '0'
+            option max_ttl '60'
+            option name 'wan'
+            option recovery_interval '3'
+            option reliability '1'
+            option size '56'
+            option timeout '4'
+            list track_ip '192.0.0.1'
+            list track_ip '192.0.0.2'
+            option track_method 'ping'
+            option up '5'
 
 Including custom options
 ------------------------
