@@ -444,8 +444,8 @@ schema = merge_config(
                         "type": "boolean",
                         "title": "upd_privateip",
                         "description": "disallow/allow sending of private/special IP's to the DDNS provider; "
-                                       "blocked IPv4: 0/8, 10/8, 100.64/10, 127/8, 169.254/16, 172.16/12, "
-                                       "192.168/16; blocked IPv6: ::/32, f000::/4",
+                        "blocked IPv4: 0/8, 10/8, 100.64/10, 127/8, 169.254/16, 172.16/12, "
+                        "192.168/16; blocked IPv6: ::/32, f000::/4",
                         "default": False,
                         "format": "checkbox",
                         "propertyOrder": 1,
@@ -482,7 +482,7 @@ schema = merge_config(
                         "type": "boolean",
                         "title": "use_curl",
                         "description": "if both wget and curl are installed, wget is used for communication "
-                                       "by default",
+                        "by default",
                         "default": False,
                         "format": "checkbox",
                         "propertyOrder": 6,
@@ -518,21 +518,16 @@ schema = merge_config(
                                     "type": "string",
                                     "title": "interface",
                                     "description": "network from /etc/config/network to monitor for up/down "
-                                                   "events to start the ddns update script via hotplug",
+                                    "events to start the ddns update script via hotplug",
                                     "propertyOrder": 2,
                                 },
                                 "ip_source": {
                                     "type": "string",
                                     "title": "ip_source",
-                                    "description": "specifies the source to detect the local IP: 'network' uses "
-                                                   "'ip_network', 'web' uses 'ip_url', 'interface' uses "
-                                                   "'ip_interface', 'script' uses 'ip_script'",
-                                    "enum": [
-                                        "network",
-                                        "web",
-                                        "interface",
-                                        "script"
-                                    ],
+                                    "description": "specifies the source to detect the local IP: "
+                                    "'network' uses 'ip_network', 'web' uses 'ip_url', 'interface' uses "
+                                    "'ip_interface', 'script' uses 'ip_script'",
+                                    "enum": ["network", "web", "interface", "script"],
                                     "default": "network",
                                     "propertyOrder": 3,
                                 },
@@ -545,9 +540,10 @@ schema = merge_config(
                                 "domain": {
                                     "type": "string",
                                     "title": "domain",
-                                    "description": "the DNS name to update; this property can also be used for "
-                                                   "special multihost update configurations supported by"
-                                                   " some providers",
+                                    "description": "the DNS name to update;"
+                                    " this property can also be used for "
+                                    "special multihost update configurations supported by"
+                                    " some providers",
                                     "propertyOrder": 5,
                                 },
                                 "username": {
@@ -571,7 +567,8 @@ schema = merge_config(
                                 "update_url": {
                                     "type": "string",
                                     "title": "update_url",
-                                    "description": "url to the DDNS service to use if 'service_name' is not set",
+                                    "description": "url to the DDNS service to use"
+                                    " if 'service_name' is not set",
                                     "propertyOrder": 9,
                                 },
                                 "update_script": {
@@ -583,8 +580,8 @@ schema = merge_config(
                                 "ip_network": {
                                     "type": "string",
                                     "title": "ip_network",
-                                    "description": "network from /etc/config/network to use for detecting the IP "
-                                                   "if 'ip_source' is set to 'network'",
+                                    "description": "network from /etc/config/network to use"
+                                    " for detecting the IP if 'ip_source' is set to 'network'",
                                     "default": "wan",
                                     "propertyOrder": 11,
                                 },
@@ -592,21 +589,21 @@ schema = merge_config(
                                     "type": "string",
                                     "title": "ip_url",
                                     "description": "url to use for detecting the IP if 'ip_source' is set to "
-                                                   "'web'",
+                                    "'web'",
                                     "propertyOrder": 12,
                                 },
                                 "ip_interface": {
                                     "type": "string",
                                     "title": "ip_interface",
-                                    "description": "local interface to use for detecting the IP if 'ip_source' is"
-                                                   " set to 'interface'",
+                                    "description": "local interface to use"
+                                    " for detecting the IP if 'ip_source' is set to 'interface'",
                                     "propertyOrder": 13,
                                 },
                                 "ip_script": {
                                     "type": "string",
                                     "title": "ip_script",
-                                    "description": "script to use for detecting the IP if 'ip_source' is set to "
-                                                   "'script'",
+                                    "description": "script to use for detecting the IP"
+                                    " if 'ip_source' is set to 'script'",
                                     "propertyOrder": 14,
                                 },
                                 "use_syslog": {
@@ -620,7 +617,7 @@ schema = merge_config(
                                             "1 - info, notice, warning, errors",
                                             "2 - notice, warning, errors",
                                             "3 - warning, errors",
-                                            "4 - errors"
+                                            "4 - errors",
                                         ]
                                     },
                                     "default": 0,
@@ -632,14 +629,14 @@ schema = merge_config(
                                     "description": "disable/enable logging to logfile",
                                     "default": True,
                                     "propertyOrder": 16,
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
 )
 
 
